@@ -7,7 +7,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/',include('accounts.urls')),
+    path('auth/',include('accounts.urls')),
+    path('events/',include('events.urls')),
     # YOUR PATTERNS
     path('download/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:

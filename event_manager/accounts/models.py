@@ -14,7 +14,7 @@ class StatusChoices(models.TextChoices):
 class User(AbstractUser):
     username = models.CharField(max_length=100,blank=True,null = True,unique=True)
     phone = models.CharField(max_length=13,unique=True,null=True,blank=True)
-    status = models.CharField(choices=StatusChoices,default=StatusChoices.NEW)
+    status = models.CharField(max_length=10,choices=StatusChoices,default=StatusChoices.NEW)
     bio = models.TextField(blank = True,null=True)
     image = models.FileField(upload_to='user/',blank=True,null=True)
 
