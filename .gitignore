@@ -1,0 +1,7 @@
+__init__.py
+__pycache__/
+*.pyc
+*.pyo
+.env
+env
+db.sqlite3
