@@ -36,7 +36,9 @@ class User(AbstractUser):
         if not self.username:
             self.username = str(uuid4()).split('-')[-1]
         if not self.password:
-            self.password = str(uuid4()).split('-')[-1]
+            # Never store a raw/random password in DB.
+            # This creates a hashed unusable password until user sets it in /register/.
+            self.set_unusable_password()
 
         return super().save(*args,**kwargs)
     

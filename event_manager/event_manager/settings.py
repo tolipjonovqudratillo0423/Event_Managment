@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'events',
+    'django_filters',
     'drf_spectacular',
     'rest_framework_simplejwt',]
 

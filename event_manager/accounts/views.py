@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import authenticate
 
 from accounts.models import User, StatusChoices, VerifyCode
@@ -25,7 +25,7 @@ class SendCodeToEmail(APIView):
         
         send_code(email=email,code=code)
         
-        return ResponseMessage.success(F'Your code sent to {email}',tokens(user))
+        return ResponseMessage.success(F'Your code sent to {email}')
         
 
 class VerifyEmailCode(APIView):
@@ -61,17 +61,23 @@ class VerifyEmailCode(APIView):
         verify_code.user.save()
         verify_code.delete()
         
-        return ResponseMessage.success('Your account has been verified')
+        return ResponseMessage.success('Your account has been verified',tokens(verify_code.user))
 
 
 class ResendCode(APIView):
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = EmailSerializer
 
     def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        user = request.user
+        email = serializer.validated_data.get('email')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return ResponseMessage.error(message='User not found')
 
         if self.resend_code(user):
             return ResponseMessage.success(
